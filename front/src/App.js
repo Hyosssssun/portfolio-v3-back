@@ -1,24 +1,16 @@
-import logo from './logo.svg';
 import './App.css';
 
 function App() {
+  const handleClick = async () => {
+    const test = await fetch('http://localhost:8080');
+    const response = await test.json();
+    console.log(response.body);
+    return response.body;
+  };
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <h1 className='App' onClick={() => handleClick()}>
+      Click me
+    </h1>
   );
 }
 
