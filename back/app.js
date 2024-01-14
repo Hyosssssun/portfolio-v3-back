@@ -23,10 +23,6 @@ app.get('/', (req, res) => {
   res.json({ message: 'ok' });
 });
 
-app.listen(port, () => {
-  console.log(`Example app listening on port ${port}`);
-});
-
 app.use(function (req, res, next) {
   res
     .status(404)
@@ -36,6 +32,10 @@ app.use(function (req, res, next) {
 app.use(function (err, req, res, next) {
   console.error(err.message, err.stack);
   res.status(500).json(err);
+});
+
+app.listen(port, () => {
+  console.log(`Example app listening on port ${port}`);
 });
 
 export default app;

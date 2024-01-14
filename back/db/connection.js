@@ -17,10 +17,12 @@ try {
 } catch (error) {
   console.log(`Error during connection: ${error}`);
 }
-// TODO: Close client
 
 const database = client.db('mongodb_fullstack');
-export default database;
+
+export const closeConnection = async () => {
+  await client.close();
+};
 
 const connectionHealthCheck = async () => {
   try {
@@ -39,37 +41,4 @@ const connectionHealthCheck = async () => {
   }
 };
 
-/* First try */
-
-// const openConnectionToProducts = async () => {
-//   try {
-//     await client.connect();
-//     await client.db('admin').command({ ping: 1 });
-//     console.log(
-//       'Pinged your deployment. You successfully connected to MongoDB!'
-//     );
-
-//     const database = client.db('mongodb_fullstack');
-//     const productsCollection = database.collection('products');
-//     console.log(productsCollection);
-//     return productsCollection;
-//   } catch (error) {
-//     console.log(`Error during connection: ${error}`);
-//   }
-// };
-// const connectDB = openConnectionToProducts().catch(console.dir);
-// export default connectDB;
-
-/* Second try */
-
-// import { MongoClient } from "mongodb";
-//     const connectionString = process.env.ATLAS_URI || "";
-//     const client = new MongoClient(connectionString);
-//     let conn;
-//     try {
-//       conn = await client.connect();
-//     } catch(e) {
-//       console.error(e);
-//     }
-//     let db = conn.db("sample_training");
-//     export default db;
+export default database;
