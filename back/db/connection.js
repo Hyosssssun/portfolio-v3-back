@@ -1,7 +1,7 @@
+import { MongoMemoryServer } from 'mongodb-memory-server';
 import config from '../config.js';
 import { MongoClient, ServerApiVersion } from 'mongodb';
 
-// Create a MongoClient with a MongoClientOptions object to set the Stable API version
 const client = new MongoClient(config.uri, {
   serverApi: {
     version: ServerApiVersion.v1,
@@ -10,35 +10,37 @@ const client = new MongoClient(config.uri, {
   },
 });
 
-try {
-  await client.connect();
-  await client.db('admin').command({ ping: 1 });
-  console.log('Pinged your deployment. You successfully connected to MongoDB!');
-} catch (error) {
-  console.log(`Error during connection: ${error}`);
-}
+let mongod;
 
-const database = client.db('mongodb_fullstack');
-
-export const closeConnection = async () => {
-  await client.close();
-};
-
-const connectionHealthCheck = async () => {
+const connectDB = async () => {
   try {
-    // Connect the client to the server	(optional starting in v4.7)
-    await client.connect();
-    // Send a ping to confirm a successful connection
-    await client.db('admin').command({ ping: 1 });
-    console.log(
-      'Pinged your deployment. You successfully connected to MongoDB!'
-    );
-  } catch (error) {
-    console.log(new Error(`Error during health check: ${error}`));
-  } finally {
-    // Ensures that the client will close when you finish/error
-    await client.close();
+    let dbUrl = config.uri;
+    if (process.env.NODE_ENV === 'test') {
+      console.log('TEST ENV!');
+      mongod = await MongoMemoryServer.create();
+      dbUrl = mongod.getUri();
+    }
+
+    await client.connect(dbUrl);
+    console.log('MongoDB connected');
+  } catch (err) {
+    console.error(err);
+    process.exit(1);
   }
 };
 
-export default database;
+const disconnectDB = async () => {
+  try {
+    await client.close();
+    if (mongod) {
+      await mongod.stop();
+    }
+  } catch (err) {
+    console.error(err);
+    process.exit(1);
+  }
+};
+
+const database = client.db('mongodb_fullstack');
+
+export { database, connectDB, disconnectDB };
