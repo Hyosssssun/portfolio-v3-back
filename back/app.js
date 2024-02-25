@@ -34,7 +34,7 @@ app.use(function (err, req, res, next) {
   res.status(500).json(err);
 });
 
-app.listen(port, () => {
+export const server = app.listen(port, () => {
   console.log(`Example app listening on port ${port}`);
 });
 
