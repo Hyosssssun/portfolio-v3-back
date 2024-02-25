@@ -1,9 +1,10 @@
 import express from 'express';
-import database, { closeConnection } from '../db/connection.js';
 import { ObjectId } from 'mongodb';
 
+import { database } from '../db/connection.js';
+
 const router = express.Router();
-const productsCollection = database.collection('products');
+export const productsCollection = database.collection('products');
 
 /* GET ALL PRODUCTS */
 router.get('/', async (_, res) => {
@@ -14,14 +15,12 @@ router.get('/', async (_, res) => {
     res.send(products).status(200);
   } catch (err) {
     console.error(`Something is wrong here`, err.message);
-  } finally {
-    await closeConnection();
   }
 });
 
 /* GET A PRODUCT */
 router.get('/:id', async (req, res) => {
-  console.log(req.params);
+  console.log('*** in get with Id', req.params);
   const query = { _id: new ObjectId(req.params.id) };
 
   try {
@@ -35,8 +34,6 @@ router.get('/:id', async (req, res) => {
     }
   } catch (err) {
     console.error(`Something is wrong here`, err.message);
-  } finally {
-    await closeConnection();
   }
 });
 
@@ -51,8 +48,6 @@ router.post('/', async (req, res) => {
     res.send(product).status(204);
   } catch (err) {
     console.error(`Something is wrong here`, err.message);
-  } finally {
-    await closeConnection();
   }
 });
 
@@ -70,8 +65,6 @@ router.put('/:id', async (req, res) => {
     res.send(product).status(200);
   } catch (err) {
     console.error(`Something is wrong here`, err.message);
-  } finally {
-    await closeConnection();
   }
 });
 
@@ -86,8 +79,6 @@ router.delete('/:id', async (req, res) => {
     res.send(product).status(200);
   } catch (err) {
     console.error(`Something is wrong here`, err.message);
-  } finally {
-    await closeConnection();
   }
 });
 
