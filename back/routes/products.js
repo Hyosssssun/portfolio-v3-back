@@ -5,12 +5,12 @@ import { database } from '../db/connection.js';
 
 const router = express.Router();
 export const productsCollection = database.collection('products');
+const isDev = process.env.NODE_ENV === 'test';
 
 /* GET ALL PRODUCTS */
 router.get('/', async (_, res) => {
   try {
     const products = await productsCollection.find({}).toArray();
-    console.log('-----in new get', products);
 
     res.send(products).status(200);
   } catch (err) {
@@ -20,12 +20,11 @@ router.get('/', async (_, res) => {
 
 /* GET A PRODUCT */
 router.get('/:id', async (req, res) => {
-  console.log('*** in get with Id', req.params);
-  const query = { _id: new ObjectId(req.params.id) };
+  const queryParam = isDev ? req.params.id : new ObjectId(req.params.id);
+  const query = { _id: queryParam };
 
   try {
     const product = await productsCollection.findOne(query);
-    console.log('-----in new getById', product);
 
     if (!product) {
       res.send('Not found').status(404);
@@ -43,9 +42,8 @@ router.post('/', async (req, res) => {
 
   try {
     let product = await productsCollection.insertOne(newDocument);
-    console.log('-----in new post', product);
 
-    res.send(product).status(204);
+    res.send(product).status(201);
   } catch (err) {
     console.error(`Something is wrong here`, err.message);
   }
@@ -53,14 +51,14 @@ router.post('/', async (req, res) => {
 
 /* UPDATE A PRODUCT */
 router.put('/:id', async (req, res) => {
-  const query = { _id: ObjectId(req.params.id) };
+  const queryParam = isDev ? req.params.id : new ObjectId(req.params.id);
+  const query = { _id: queryParam };
   const updates = {
-    $push: req.body,
+    $set: req.body,
   };
 
   try {
     let product = await productsCollection.updateOne(query, updates);
-    console.log('-----in new update', product);
 
     res.send(product).status(200);
   } catch (err) {
@@ -70,13 +68,13 @@ router.put('/:id', async (req, res) => {
 
 /* DELETE A PRODUCT */
 router.delete('/:id', async (req, res) => {
-  const query = { _id: ObjectId(req.params.id) };
+  const queryParam = isDev ? req.params.id : new ObjectId(req.params.id);
+  const query = { _id: queryParam };
 
   try {
     let product = await productsCollection.deleteOne(query);
-    console.log('-----in new delete', product);
 
-    res.send(product).status(200);
+    res.send(product).status(204);
   } catch (err) {
     console.error(`Something is wrong here`, err.message);
   }
