@@ -5,12 +5,17 @@ function App() {
     <h1
       className='App'
       onClick={async () => {
-        const test = await fetch(
-          'http://localhost:8080/products/65a3156572d518107fc2aa26',
-          {
-            method: 'get',
-          }
-        );
+        const test = await fetch('http://localhost:8080/products/', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            stock_number: '16666',
+            name: '1666',
+            Description: '1666',
+            Price: '£92',
+          }),
+          // encodeBodyAsJSON: true,
+        });
         const response = await test.json();
         console.log(response.body);
         return response.body;
