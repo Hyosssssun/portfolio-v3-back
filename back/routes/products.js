@@ -1,14 +1,14 @@
-import express from 'express';
-import { ObjectId } from 'mongodb';
+import express from "express";
+import { ObjectId } from "mongodb";
 
-import { database } from '../db/connection.js';
+import { database } from "../db/connection.js";
 
+export const productsCollection = database.collection("products");
 const router = express.Router();
-export const productsCollection = database.collection('products');
-const isDev = process.env.NODE_ENV === 'test';
+const isDev = process.env.NODE_ENV === "test";
 
 /* GET ALL PRODUCTS */
-router.get('/', async (_, res) => {
+router.get("/", async (_, res) => {
   try {
     const products = await productsCollection.find({}).toArray();
 
@@ -19,7 +19,7 @@ router.get('/', async (_, res) => {
 });
 
 /* GET A PRODUCT */
-router.get('/:id', async (req, res) => {
+router.get("/:id", async (req, res) => {
   const queryParam = isDev ? req.params.id : new ObjectId(req.params.id);
   const query = { _id: queryParam };
 
@@ -27,7 +27,7 @@ router.get('/:id', async (req, res) => {
     const product = await productsCollection.findOne(query);
 
     if (!product) {
-      res.send('Not found').status(404);
+      res.send("Not found").status(404);
     } else {
       res.send(product).status(200);
     }
@@ -37,7 +37,7 @@ router.get('/:id', async (req, res) => {
 });
 
 /* ADD A PRODUCT */
-router.post('/', async (req, res) => {
+router.post("/", async (req, res) => {
   let newDocument = req.body;
 
   try {
@@ -50,7 +50,7 @@ router.post('/', async (req, res) => {
 });
 
 /* UPDATE A PRODUCT */
-router.put('/:id', async (req, res) => {
+router.put("/:id", async (req, res) => {
   const queryParam = isDev ? req.params.id : new ObjectId(req.params.id);
   const query = { _id: queryParam };
   const updates = {
@@ -67,7 +67,7 @@ router.put('/:id', async (req, res) => {
 });
 
 /* DELETE A PRODUCT */
-router.delete('/:id', async (req, res) => {
+router.delete("/:id", async (req, res) => {
   const queryParam = isDev ? req.params.id : new ObjectId(req.params.id);
   const query = { _id: queryParam };
 
