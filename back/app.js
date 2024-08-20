@@ -1,26 +1,26 @@
-import express from 'express';
-import logger from 'morgan';
-import cors from 'cors';
-import cookieParser from 'cookie-parser';
-import path from 'path';
+import express from "express";
+import logger from "morgan";
+import cors from "cors";
+import cookieParser from "cookie-parser";
+import path from "path";
 
-import __dirname from './dirname.js';
-import productsRouter from './routes/products.js';
+import __dirname from "./dirname.js";
+import productsRouter from "./routes/products.js";
 
 const app = express();
 const port = 8080;
 
 app.use(cors());
-app.use(logger('dev'));
+app.use(logger("dev"));
 app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(path.join(__dirname, "public")));
 
-app.use('/products', productsRouter);
+app.use("/products", productsRouter);
 
-app.get('/', (req, res) => {
-  res.json({ message: 'ok' });
+app.get("/", (req, res) => {
+  res.json({ message: "ok" });
 });
 
 app.use(function (req, res, next) {

@@ -1,3 +1,3 @@
-const presetConfig = { preset: '@shelf/jest-mongodb' };
+const presetConfig = { preset: "@shelf/jest-mongodb" };
 
 export default presetConfig;
